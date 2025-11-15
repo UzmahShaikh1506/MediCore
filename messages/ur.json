@@ -1,0 +1,36 @@
+{
+  "common": {
+    "appName": "MediCore اصطلاحات سادہ کار",
+    "translate": "ترجمہ کریں",
+    "chatbot": "چیٹ بوٹ",
+    "reportAnalyzer": "رپورٹ تجزیہ کار",
+    "upload": "اپ لوڈ کریں",
+    "analyze": "تجزیہ کریں",
+    "clear": "صاف کریں",
+    "loading": "لوڈ ہو رہا ہے...",
+    "error": "خرابی",
+    "success": "کامیابی"
+  },
+  "translator": {
+    "title": "طبی متن مترجم",
+    "description": "پیچیدہ طبی متن کو سادہ، سمجھنے میں آسان زبان میں ترجمہ کریں",
+    "inputPlaceholder": "طبی متن یہاں درج کریں...",
+    "outputLabel": "سادہ متن"
+  },
+  "chatbot": {
+    "title": "طبی اصطلاحات چیٹ بوٹ",
+    "description": "طبی اصطلاحات کے بارے میں سوالات پوچھیں اور سادہ وضاحتیں حاصل کریں",
+    "inputPlaceholder": "طبی اصطلاحات کے بارے میں سوال پوچھیں...",
+    "send": "بھیجیں"
+  },
+  "reportAnalyzer": {
+    "title": "طبی رپورٹ تجزیہ کار",
+    "description": "اپنی طبی رپورٹس اپ لوڈ کریں اور سادہ خلاصے حاصل کریں",
+    "uploadLabel": "رپورٹ اپ لوڈ کریں",
+    "supportedFormats": "معاون فارمیٹس: PDF, JPG, PNG",
+    "summary": "خلاصہ",
+    "keyFindings": "اہم نتائج",
+    "extractedText": "نکالا گیا متن"
+  }
+}
+

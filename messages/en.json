@@ -1,0 +1,36 @@
+{
+  "common": {
+    "appName": "MediCore Jargon Simplifier",
+    "translate": "Translate",
+    "chatbot": "Chatbot",
+    "reportAnalyzer": "Report Analyzer",
+    "upload": "Upload",
+    "analyze": "Analyze",
+    "clear": "Clear",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "translator": {
+    "title": "Medical Text Translator",
+    "description": "Translate complex medical text into simple, easy-to-understand language",
+    "inputPlaceholder": "Enter medical text here...",
+    "outputLabel": "Simplified Text"
+  },
+  "chatbot": {
+    "title": "Medical Terminology Chatbot",
+    "description": "Ask questions about medical terms and get simple explanations",
+    "inputPlaceholder": "Ask a question about medical terms...",
+    "send": "Send"
+  },
+  "reportAnalyzer": {
+    "title": "Medical Report Analyzer",
+    "description": "Upload your medical reports and get simplified summaries",
+    "uploadLabel": "Upload Report",
+    "supportedFormats": "Supported formats: PDF, JPG, PNG",
+    "summary": "Summary",
+    "keyFindings": "Key Findings",
+    "extractedText": "Extracted Text"
+  }
+}
+
