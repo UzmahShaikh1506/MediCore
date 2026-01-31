@@ -27,7 +27,7 @@ export default function HowItWorksPage() {
               Simple 4-Step Process
             </Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-balance">
-              How MediScope AI <span className="text-primary">Works</span>
+              How MediCore <span className="text-primary">Works</span>
             </h1>
             <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
               Transform your medical reports into actionable health insights in just four simple steps. No technical

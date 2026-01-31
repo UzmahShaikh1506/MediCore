@@ -33,8 +33,8 @@ export default function FeaturesPage() {
               Comprehensive Health <span className="text-primary">Features</span>
             </h1>
             <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
-              Discover how MediScope AI transforms medical report management with cutting-edge technology designed for
-              Indian healthcare needs.
+              Discover how MediCore transforms medical report understanding with cutting-edge AI technology designed for
+              patients and caregivers across India.
             </p>
           </div>
         </div>
@@ -348,7 +348,7 @@ export default function FeaturesPage() {
           <div className="max-w-3xl mx-auto space-y-8">
             <h2 className="text-3xl lg:text-4xl font-bold text-balance">Experience All Features Today</h2>
             <p className="text-xl text-primary-foreground/80 text-pretty">
-              Start managing your health reports smarter with MediScope AI's comprehensive feature set.
+              Start understanding your medical reports better with MediCore's comprehensive feature set.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-lg px-8">

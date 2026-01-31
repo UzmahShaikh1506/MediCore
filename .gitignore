@@ -20,6 +20,16 @@ yarn-error.log*
 # env files
 .env*
 
+# Python
+.ocr-venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+
 # vercel
 .vercel
 

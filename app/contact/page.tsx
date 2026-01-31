@@ -43,7 +43,7 @@ export default function ContactPage() {
               Get in Touch
             </Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-balance">
-              Contact <span className="text-primary">MediScope AI</span>
+              Contact <span className="text-primary">MediCore</span>
             </h1>
             <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
               Have questions about our AI-powered healthcare platform? We're here to help. Reach out to our team for
@@ -141,7 +141,7 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-semibold mb-1">Email Us</h3>
                         <p className="text-muted-foreground text-sm mb-2">For general inquiries and support</p>
-                        <p className="text-primary font-medium">hello@mediscope.ai</p>
+                        <p className="text-primary font-medium">hello@medicore.app</p>
                       </div>
                     </div>
                   </CardContent>
@@ -208,7 +208,7 @@ export default function ContactPage() {
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-balance">Frequently Asked Questions</h2>
             <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto">
-              Quick answers to common questions about MediScope AI.
+              Quick answers to common questions about MediCore.
             </p>
           </div>
 
@@ -329,8 +329,8 @@ export default function ContactPage() {
           <div className="max-w-3xl mx-auto space-y-8">
             <h2 className="text-3xl lg:text-4xl font-bold text-balance">Ready to Get Started?</h2>
             <p className="text-xl text-primary-foreground/80 text-pretty">
-              Don't wait to take control of your health data. Try MediScope AI today and experience the future of
-              healthcare analytics.
+              Don't wait to understand your medical reports. Try MediCore today and experience simplified medical jargon
+              with AI-powered analysis.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-lg px-8">

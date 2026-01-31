@@ -20,15 +20,41 @@ export async function extractTextFromImage(imageBuffer: Buffer): Promise<OCRResu
     const pythonScriptPath = join(process.cwd(), 'ocr_service.py')
     
     // Check if Python is available
+    // On Windows, prefer py launcher with Python 3.12 (where easyocr is installed)
     let pythonCommand = 'python'
-    try {
-      await execAsync('python --version')
-    } catch {
+    const isWindows = process.platform === 'win32'
+    
+    if (isWindows) {
+      // Try py -3.12 first (where easyocr is installed)
+      try {
+        await execAsync('py -3.12 --version')
+        pythonCommand = 'py -3.12'
+      } catch {
+        // Fall back to regular python
+        try {
+          await execAsync('python --version')
+          pythonCommand = 'python'
+        } catch {
+          try {
+            await execAsync('python3 --version')
+            pythonCommand = 'python3'
+          } catch {
+            throw new Error('Python is not installed. Please install Python 3.8+ to use OCR features.')
+          }
+        }
+      }
+    } else {
+      // On Unix-like systems, try python3 first
       try {
         await execAsync('python3 --version')
         pythonCommand = 'python3'
       } catch {
-        throw new Error('Python is not installed. Please install Python 3.8+ to use OCR features.')
+        try {
+          await execAsync('python --version')
+          pythonCommand = 'python'
+        } catch {
+          throw new Error('Python is not installed. Please install Python 3.8+ to use OCR features.')
+        }
       }
     }
 

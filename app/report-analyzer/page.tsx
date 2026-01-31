@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import jsPDF from 'jspdf'
 import { Button } from '@/components/ui/button'
@@ -16,9 +16,11 @@ import type { Language } from '@/lib/types'
 
 export default function ReportAnalyzerPage() {
   const [file, setFile] = useState<File | null>(null)
+  const [filePreview, setFilePreview] = useState<string | null>(null)
   const [language, setLanguage] = useState<Language>('en')
   const [loading, setLoading] = useState(false)
   const [analysis, setAnalysis] = useState<ReportAnalysisResponse | null>(null)
+  const [shouldAutoProcess, setShouldAutoProcess] = useState(false)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -28,13 +30,32 @@ export default function ReportAnalyzerPage() {
     maxFiles: 1,
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
-        setFile(acceptedFiles[0])
+        const selectedFile = acceptedFiles[0]
+        setFile(selectedFile)
         setAnalysis(null)
+        setShouldAutoProcess(true) // Flag to auto-process after drop
+        
+        // Create preview URL for images
+        if (selectedFile.type.startsWith('image/')) {
+          const previewUrl = URL.createObjectURL(selectedFile)
+          setFilePreview(previewUrl)
+        } else {
+          setFilePreview(null)
+        }
       }
     },
   })
 
-  const handleAnalyze = async () => {
+  // Clean up preview URL when component unmounts or file changes
+  useEffect(() => {
+    return () => {
+      if (filePreview) {
+        URL.revokeObjectURL(filePreview)
+      }
+    }
+  }, [filePreview])
+
+  const handleAnalyze = useCallback(async () => {
     if (!file) {
       toast.error('Please upload a file first')
       return
@@ -67,11 +88,28 @@ export default function ReportAnalyzerPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [file, language])
+
+  // Automatically start processing when a file is dropped
+  useEffect(() => {
+    if (file && shouldAutoProcess && !loading) {
+      // Small delay to ensure file preview is rendered first
+      const timer = setTimeout(() => {
+        handleAnalyze()
+        setShouldAutoProcess(false) // Reset flag after processing starts
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [file, shouldAutoProcess, loading, handleAnalyze]) // Trigger when file is dropped
 
   const handleClear = () => {
+    if (filePreview) {
+      URL.revokeObjectURL(filePreview)
+    }
     setFile(null)
+    setFilePreview(null)
     setAnalysis(null)
+    setShouldAutoProcess(false)
   }
 
   const handleDownloadPDF = () => {
@@ -290,41 +328,63 @@ export default function ReportAnalyzerPage() {
               <CardContent className="flex flex-col gap-4 h-full">
                 <div
                   {...getRootProps()}
-                  className={`flex-1 border-2 border-dashed rounded-lg p-8 cursor-pointer transition-colors ${
+                  className={`flex-1 border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors ${
                     isDragActive
                       ? 'border-primary bg-primary/5'
                       : 'border-muted-foreground/25 hover:border-primary/50'
                   }`}
                 >
                   <input {...getInputProps()} />
-                  <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-                    {file ? (
-                      <>
-                        <CheckCircle2 className="h-12 w-12 text-primary" />
-                        <div>
-                          <p className="font-semibold">{file.name}</p>
-                          <p className="text-sm text-muted-foreground">
+                  {file && filePreview ? (
+                    // Show image preview
+                    <div className="flex flex-col h-full gap-3">
+                      <div className="flex-1 flex items-center justify-center bg-muted/30 rounded-lg overflow-hidden">
+                        <img
+                          src={filePreview}
+                          alt="Uploaded file preview"
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">{file.name}</p>
+                          <p className="text-xs text-muted-foreground">
                             {(file.size / 1024 / 1024).toFixed(2)} MB
                           </p>
                         </div>
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="flex-shrink-0">
                           {getFileType(file).toUpperCase()}
                         </Badge>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-12 w-12 text-muted-foreground" />
-                        <div>
-                          <p className="font-semibold">
-                            {isDragActive ? 'Drop file here' : 'Drag & drop or click to upload'}
-                          </p>
-                          <p className="text-sm text-muted-foreground mt-2">
-                            PDF, JPG, PNG, JPEG files are supported
-                          </p>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </div>
+                  ) : file ? (
+                    // Show file info for PDFs or when preview is not available
+                    <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+                      <CheckCircle2 className="h-12 w-12 text-primary" />
+                      <div>
+                        <p className="font-semibold">{file.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <Badge variant="secondary">
+                        {getFileType(file).toUpperCase()}
+                      </Badge>
+                    </div>
+                  ) : (
+                    // Show upload prompt
+                    <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+                      <Upload className="h-12 w-12 text-muted-foreground" />
+                      <div>
+                        <p className="font-semibold">
+                          {isDragActive ? 'Drop file here' : 'Drag & drop or click to upload'}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          PDF, JPG, PNG, JPEG files are supported
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex gap-2">

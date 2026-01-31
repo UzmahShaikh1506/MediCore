@@ -1,0 +1,342 @@
+@startuml Report_Analyzer_Workflow
+!theme plain
+skinparam swimlane {
+    BackgroundColor #E1F5FF
+    BorderColor #0066CC
+    TitleBackgroundColor #0066CC
+    TitleFontColor #FFFFFF
+}
+
+title Report Analyzer Workflow - MediCore
+
+|User|
+start
+:Upload Medical Report;
+:Select PDF or Image file;
+:Click "Analyze" button;
+
+|Frontend|
+:Validate File Selection;
+if (File selected?) then (No)
+  :Display error;
+  stop
+else (Yes)
+  :Prepare File for Upload;
+  :Validate file extension;
+  :Check file size;
+  if (File valid?) then (No)
+    :Display error;
+    stop
+  else (Yes)
+    :Send to API;
+  endif
+endif
+
+|API Route|
+:Receive Upload Request;
+:Parse FormData;
+:Validate File Type & Size;
+if (File valid?) then (No)
+  :Return error (400);
+  stop
+else (Yes)
+endif
+
+fork
+  :Extract Text from PDF\n(pdf-parse);
+  |OCR Service|
+  note right: PDF path
+endfork
+
+fork again
+  :Extract Text from Image\n(Python EasyOCR);
+  |OCR Service|
+  note right: Image path
+endfork
+
+|API Route|
+:Join extracted text;
+:Validate Extracted Text;
+if (Text valid?) then (No)
+  :Return error;
+  stop
+else (Yes)
+  :Preprocess Extracted Text;
+  :Clean and format text;
+endif
+
+fork
+  :Try Ollama Analysis;
+  |AI Service|
+  note right: Primary method
+  if (Ollama successful?) then (Yes)
+    :Return AI analysis;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Try Hugging Face Analysis;
+  |AI Service|
+  note right: Fallback method
+  if (Hugging Face successful?) then (Yes)
+    :Return AI analysis;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Try OpenAI Analysis\n(if API key exists);
+  |AI Service|
+  note right: Optional method
+  if (OpenAI successful?) then (Yes)
+    :Return AI analysis;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Use Dictionary Fallback;
+  |AI Service|
+  note right: Last resort
+  :Generate basic explanations;
+endfork
+
+|Parameter Parser|
+:Join AI responses;
+:Extract Test Parameters;
+repeat
+  :Extract parameter name;
+  :Extract patient value;
+  :Extract normal range;
+  :Detect HIGH/LOW/NORMAL status;
+  :Generate parameter explanation;
+repeat while (More parameters?) is (Yes)
+-> No;
+:Generate Parameter Breakdown;
+
+|AI Service|
+:Generate Detailed Summary\n(8-12 sentences);
+:Generate Detailed Explanation\n(6-8 sentences);
+:Extract Key Findings\n(7-10 items);
+:Generate Treatment Recommendations\n(4-6 items);
+:Generate Medicine Suggestions\n(3-5 items);
+:Generate Lifestyle Advice\n(4-6 items);
+:Generate "When to Consult Doctor"\n(3-4 items);
+
+|API Route|
+:Format Response;
+:Normalize arrays;
+:Convert objects to strings;
+:Return Response to Frontend;
+
+|Frontend|
+:Receive Analysis Response;
+:Display Analysis Results;
+:Apply Color Coding\n(HIGH: Red, LOW: Orange, NORMAL: Green);
+:Display Detailed Summary;
+:Display Detailed Explanation;
+:Display Key Findings;
+:Display Treatment Recommendations;
+:Display Medicine Suggestions;
+:Display Lifestyle Advice;
+:Display "When to Consult Doctor";
+:Display Parameter Breakdown;
+
+|User|
+:View Analysis Results;
+stop
+
+@enduml
+
+@startuml Medical_Text_Translator_Workflow
+!theme plain
+skinparam swimlane {
+    BackgroundColor #E1F5FF
+    BorderColor #0066CC
+    TitleBackgroundColor #0066CC
+    TitleFontColor #FFFFFF
+}
+
+title Medical Text Translator Workflow - MediCore
+
+|User|
+start
+:Enter Medical Text;
+:Type or paste medical text;
+:Select target language\n(en, hi, mr, ur);
+:Click "Translate" button;
+
+|Frontend|
+:Validate Input;
+if (Text valid?) then (No)
+  :Display error: "Please enter medical text";
+  stop
+else (Yes)
+  :Show Loading State;
+  :Send to API;
+endif
+
+|API Route|
+:Receive Translation Request;
+:Parse JSON body;
+:Validate Request;
+if (Request valid?) then (No)
+  :Return error (400);
+  stop
+else (Yes)
+endif
+
+fork
+  :Try Ollama Translation;
+  |AI Service|
+  note right: Primary method
+  if (Ollama successful?) then (Yes)
+    :Return simplified text;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Try Hugging Face Translation;
+  |AI Service|
+  note right: Fallback method
+  if (Hugging Face successful?) then (Yes)
+    :Return simplified text;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Use Dictionary Translation;
+  |AI Service|
+  note right: Last resort
+  :Match medical terms;
+  :Replace with simple equivalents;
+  :Translate to target language;
+endfork
+
+|API Route|
+:Join translation paths;
+:Format Translation Response;
+:Return Response to Frontend;
+
+|Frontend|
+:Receive Translation Response;
+:Display Simplified Text;
+:Show original text (optional);
+:Apply language-specific formatting;
+
+|User|
+:View Simplified Text;
+stop
+
+@enduml
+
+@startuml Medical_Chatbot_Workflow
+!theme plain
+skinparam swimlane {
+    BackgroundColor #E1F5FF
+    BorderColor #0066CC
+    TitleBackgroundColor #0066CC
+    TitleFontColor #FFFFFF
+}
+
+title Medical Chatbot Workflow - MediCore
+
+|User|
+start
+:Ask Medical Question;
+:Type question in chat input;
+:Select language preference;
+:Click "Send" or press Enter;
+
+|Frontend|
+:Validate Message;
+if (Message valid?) then (No)
+  :Display error: "Please enter a question";
+  stop
+else (Yes)
+  :Add message to conversation history;
+  :Display User Message;
+  :Show Loading Indicator\n"AI is typing...";
+  :Send to API;
+endif
+
+|API Route|
+:Receive Chatbot Request;
+:Parse JSON body;
+:Validate Request;
+if (Request valid?) then (No)
+  :Return error (400);
+  stop
+else (Yes)
+endif
+
+fork
+  :Try Ollama Chatbot Response;
+  |AI Service|
+  note right: Primary method
+  :Connect to local Ollama;
+  :Send conversation history + question;
+  :Generate context-aware response;
+  if (Ollama successful?) then (Yes)
+    :Return AI response;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Try Hugging Face Chatbot Response;
+  |AI Service|
+  note right: Fallback method
+  :Connect to Hugging Face API;
+  :Generate medical Q&A response;
+  if (Hugging Face successful?) then (Yes)
+    :Return AI response;
+  else (No)
+    :Continue to fallback;
+  endif
+endfork
+
+fork again
+  :Use Dictionary-Based Response;
+  |AI Service|
+  note right: Last resort
+  :Match question keywords;
+  :Generate basic explanation;
+  :Return simple explanation;
+endfork
+
+|API Route|
+:Join AI response paths;
+:Format Chatbot Response;
+:Return Response to Frontend;
+
+|Frontend|
+:Receive Chatbot Response;
+:Add response to conversation history;
+:Display AI Response;
+:Scroll chat to bottom;
+:Enable Input;
+:Re-enable chat input;
+
+|User|
+:Review Response;
+if (User has another question?) then (Yes)
+  :Ask next question;
+  |Frontend|
+  note right: Loop back
+else (No)
+endif
+
+stop
+
+@enduml
+

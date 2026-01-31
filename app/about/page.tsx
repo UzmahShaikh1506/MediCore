@@ -18,8 +18,8 @@ export default function AboutPage() {
               Making Healthcare Insights <span className="text-primary">Accessible</span>
             </h1>
             <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
-              We believe that everyone deserves access to clear, actionable health insights. MediScope AI was born from
-              the vision to democratize healthcare analytics for patients and doctors across India.
+              We believe that everyone deserves access to clear, actionable health insights. MediCore was born from
+              the vision to democratize healthcare data accessibility for patients and caregivers across India.
             </p>
           </div>
         </div>
@@ -93,8 +93,8 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="border-0 shadow-md text-center">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* <Card className="border-0 shadow-md text-center">
               <CardHeader>
                 <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="h-12 w-12 text-primary" />
@@ -104,24 +104,22 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Specializes in machine learning and healthcare AI. Led the development of our core OCR and prediction
-                  algorithms.
+                  Specializes in AI engineering and healthcare applications. Led the development of our OCR service and AI-powered analysis features.
                 </p>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <Card className="border-0 shadow-md text-center">
               <CardHeader>
                 <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="h-12 w-12 text-primary" />
                 </div>
-                <CardTitle>Harsha Surwase</CardTitle>
+                <CardTitle>Ansari Abdul Rehman</CardTitle>
                 <CardDescription>Healthcare Data Scientist</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Expert in medical data analysis and Indian healthcare systems. Ensures our AI models are clinically
-                  relevant and accurate.
+                  Expert in medical data analysis and Indian healthcare systems. Ensures our medical terminology explanations are clinically relevant and culturally sensitive.
                 </p>
               </CardContent>
             </Card>
@@ -213,8 +211,8 @@ Protects user data and maintains compliance with healthcare security standards.
                   <h3 className="text-2xl font-bold">Our Solution</h3>
                   <p className="text-muted-foreground">
                     We combined cutting-edge AI technology with deep understanding of Indian healthcare needs to create
-                    MediScope AI. Our system can read both printed and handwritten reports, extract key health
-                    parameters, and provide meaningful insights to patients and doctors.
+                    MediCore. Our system can read both printed and handwritten reports using OCR, extract key health
+                    parameters, and provide meaningful insights with AI-powered analysis in multiple languages.
                   </p>
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
@@ -243,7 +241,7 @@ Protects user data and maintains compliance with healthcare security standards.
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-balance">Our Values</h2>
             <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto">
-              The principles that guide everything we do at MediScope AI.
+              The principles that guide everything we do at MediCore.
             </p>
           </div>
 

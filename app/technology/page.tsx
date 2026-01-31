@@ -28,7 +28,7 @@ export default function TechnologyPage() {
               Advanced AI Architecture
             </Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-balance">
-              Technology Behind <span className="text-primary">MediScope AI</span>
+              Technology Behind <span className="text-primary">MediCore</span>
             </h1>
             <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
               Discover the cutting-edge technologies and robust architecture that power our AI-driven medical report
@@ -73,7 +73,7 @@ export default function TechnologyPage() {
                     <Brain className="h-6 w-6 text-primary" />
                   </div>
                   <CardTitle className="text-lg">OCR Engine</CardTitle>
-                  <CardDescription className="text-sm">Tesseract & TrOCR Processing</CardDescription>
+                  <CardDescription className="text-sm">Python EasyOCR & pdf-parse</CardDescription>
                 </CardHeader>
               </Card>
 
@@ -89,7 +89,7 @@ export default function TechnologyPage() {
                     <Zap className="h-6 w-6 text-primary" />
                   </div>
                   <CardTitle className="text-lg">AI Analysis</CardTitle>
-                  <CardDescription className="text-sm">LightGBM & Prediction Models</CardDescription>
+                  <CardDescription className="text-sm">Ollama (Llama 3.2) & Hugging Face</CardDescription>
                 </CardHeader>
               </Card>
             </div>
@@ -98,18 +98,7 @@ export default function TechnologyPage() {
               <ArrowDown className="h-8 w-8 text-primary animate-bounce" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Database */}
-              <Card className="border-2 border-primary/20 shadow-lg">
-                <CardHeader className="text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <Database className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg">Database Layer</CardTitle>
-                  <CardDescription className="text-sm">MongoDB & Redis Caching</CardDescription>
-                </CardHeader>
-              </Card>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* API Layer */}
               <Card className="border-2 border-primary/20 shadow-lg">
                 <CardHeader className="text-center">
@@ -117,7 +106,7 @@ export default function TechnologyPage() {
                     <Server className="h-6 w-6 text-primary" />
                   </div>
                   <CardTitle className="text-lg">API Layer</CardTitle>
-                  <CardDescription className="text-sm">FastAPI & RESTful Services</CardDescription>
+                  <CardDescription className="text-sm">Next.js API Routes & Node.js</CardDescription>
                 </CardHeader>
               </Card>
 
@@ -161,7 +150,7 @@ export default function TechnologyPage() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Next.js</span>
+                    <span className="text-sm">Next.js 14 (App Router)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
@@ -170,6 +159,10 @@ export default function TechnologyPage() {
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
                     <span className="text-sm">Tailwind CSS</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    <span className="text-sm">shadcn/ui</span>
                   </div>
                 </CardDescription>
               </CardHeader>
@@ -185,19 +178,19 @@ export default function TechnologyPage() {
                 <CardDescription className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">FastAPI</span>
+                    <span className="text-sm">Next.js API Routes</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Python 3.11+</span>
+                    <span className="text-sm">Node.js</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Pydantic</span>
+                    <span className="text-sm">Python (OCR Service)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Celery</span>
+                    <span className="text-sm">TypeScript</span>
                   </div>
                 </CardDescription>
               </CardHeader>
@@ -213,47 +206,43 @@ export default function TechnologyPage() {
                 <CardDescription className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Tesseract OCR</span>
+                    <span className="text-sm">Ollama (Llama 3.2)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">TrOCR</span>
+                    <span className="text-sm">Hugging Face API</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">LightGBM</span>
+                    <span className="text-sm">EasyOCR (Python)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">scikit-learn</span>
+                    <span className="text-sm">pdf-parse</span>
                   </div>
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            {/* Database */}
+            {/* Internationalization */}
             <Card className="border-0 shadow-md">
               <CardHeader>
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Database className="h-6 w-6 text-orange-600" />
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Globe className="h-6 w-6 text-purple-600" />
                 </div>
-                <CardTitle>Database</CardTitle>
+                <CardTitle>Internationalization</CardTitle>
                 <CardDescription className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">MongoDB</span>
+                    <span className="text-sm">next-intl</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Redis</span>
+                    <span className="text-sm">4 Languages Supported</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">PostgreSQL</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                    <span className="text-sm">MinIO</span>
+                    <span className="text-sm">English, Hindi, Marathi, Urdu</span>
                   </div>
                 </CardDescription>
               </CardHeader>
@@ -313,7 +302,7 @@ export default function TechnologyPage() {
                 <CardContent className="p-6">
                   <div className="bg-muted/50 rounded-lg p-4 text-center">
                     <Brain className="h-12 w-12 text-primary mx-auto mb-2" />
-                    <div className="text-sm text-muted-foreground">Tesseract • TrOCR • EasyOCR</div>
+                    <div className="text-sm text-muted-foreground">Python EasyOCR • pdf-parse</div>
                   </div>
                 </CardContent>
               </Card>
@@ -321,8 +310,7 @@ export default function TechnologyPage() {
                 <Badge variant="secondary">Module 2</Badge>
                 <h3 className="text-2xl font-bold">OCR & Text Extraction</h3>
                 <p className="text-muted-foreground">
-                  Hybrid OCR approach combining traditional and transformer-based models for maximum accuracy across
-                  different document types.
+                  Python EasyOCR for image text extraction and pdf-parse for PDF documents. Supports both printed and handwritten text with high accuracy.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
@@ -347,8 +335,7 @@ export default function TechnologyPage() {
                 <Badge variant="secondary">Module 3</Badge>
                 <h3 className="text-2xl font-bold">Medical Data Parsing</h3>
                 <p className="text-muted-foreground">
-                  NLP-powered parsing engine that understands medical terminology and extracts structured data from
-                  unstructured reports.
+                  Regex-based parameter extraction that identifies medical parameters, values, and normal ranges from extracted text with status detection (HIGH/LOW/NORMAL).
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
@@ -369,7 +356,7 @@ export default function TechnologyPage() {
                 <CardContent className="p-6">
                   <div className="bg-muted/50 rounded-lg p-4 text-center">
                     <Zap className="h-12 w-12 text-primary mx-auto mb-2" />
-                    <div className="text-sm text-muted-foreground">spaCy • NLTK • Transformers</div>
+                    <div className="text-sm text-muted-foreground">Regex Patterns • Value Extraction</div>
                   </div>
                 </CardContent>
               </Card>
@@ -381,16 +368,15 @@ export default function TechnologyPage() {
                 <CardContent className="p-6">
                   <div className="bg-muted/50 rounded-lg p-4 text-center">
                     <Cpu className="h-12 w-12 text-primary mx-auto mb-2" />
-                    <div className="text-sm text-muted-foreground">LightGBM • XGBoost • TensorFlow</div>
+                    <div className="text-sm text-muted-foreground">Ollama • Hugging Face • Dictionary Fallback</div>
                   </div>
                 </CardContent>
               </Card>
               <div className="space-y-4 lg:order-2">
                 <Badge variant="secondary">Module 4</Badge>
-                <h3 className="text-2xl font-bold">Predictive Analytics</h3>
+                <h3 className="text-2xl font-bold">AI-Powered Analysis</h3>
                 <p className="text-muted-foreground">
-                  Machine learning models trained on Indian healthcare data to provide accurate risk predictions and
-                  health insights.
+                  AI-powered analysis using Ollama (local LLM) or Hugging Face API to generate comprehensive summaries, explanations, treatment recommendations, and lifestyle advice.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
