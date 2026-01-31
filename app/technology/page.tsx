@@ -14,6 +14,7 @@ import {
   Cpu,
   Cloud,
   Lock,
+  Globe,
 } from "lucide-react"
 
 export default function TechnologyPage() {
