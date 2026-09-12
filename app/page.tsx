@@ -12,6 +12,7 @@ import {
   Brain,
   Globe,
   Zap,
+  Stethoscope,
 } from 'lucide-react'
 
 export default function HomePage() {
@@ -107,13 +108,13 @@ export default function HomePage() {
       <section className="py-20 bg-background">
         <div className="container px-4 mx-auto">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-balance">Three Powerful Features</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold text-balance">Four Powerful Features</h2>
             <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto">
-              Everything you need to understand medical terminology and reports
+              Everything you need to understand medical terminology, reports, and symptoms
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
@@ -168,6 +169,26 @@ export default function HomePage() {
                 <Button className="w-full" asChild>
                   <Link href="/report-analyzer">
                     Analyze Report
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Stethoscope className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>AI Symptom Checker</CardTitle>
+                <CardDescription>
+                  Describe your symptoms and get an AI-powered triage — self-care, pharmacy, or doctor visit.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full" asChild>
+                  <Link href="/symptom-checker">
+                    Check Symptoms
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>

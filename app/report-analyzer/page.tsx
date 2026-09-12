@@ -138,7 +138,7 @@ export default function ReportAnalyzerPage() {
       // Helper function to add text with word wrap
       const addWrappedText = (text: string, fontSize: number, isBold: boolean = false) => {
         doc.setFontSize(fontSize)
-        doc.setFont(undefined, isBold ? 'bold' : 'normal')
+        doc.setFont('helvetica', isBold ? 'bold' : 'normal')
         const maxWidth = pageWidth - 2 * margin
         const lines = doc.splitTextToSize(text, maxWidth)
         
@@ -160,13 +160,13 @@ export default function ReportAnalyzerPage() {
 
       // Title
       doc.setFontSize(18)
-      doc.setFont(undefined, 'bold')
+      doc.setFont('helvetica', 'bold')
       doc.text('Medical Report Analysis Summary', margin, yPosition)
       yPosition += lineHeight * 2
 
       // Date
       doc.setFontSize(10)
-      doc.setFont(undefined, 'normal')
+      doc.setFont('helvetica', 'normal')
       doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, yPosition)
       yPosition += lineHeight * 2
 
@@ -543,7 +543,7 @@ export default function ReportAnalyzerPage() {
                                 ⚠️ Important: These are suggestions only. Always consult a doctor before taking any medication.
                               </p>
                               <ul className="space-y-2">
-                                {analysis.medicineSuggestions.map((medicine, index) => {
+                                {analysis.medicineSuggestions.map((medicine: any, index) => {
                                   // Ensure medicine is always a string
                                   const medicineText = typeof medicine === 'string' 
                                     ? medicine 

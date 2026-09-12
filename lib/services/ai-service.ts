@@ -90,6 +90,82 @@ function simpleMedicalSimplifier(text: string): string {
 }
 
 /**
+ * Try Google Gemini API - FREE, no credit card needed!
+ * Get your API key at: https://aistudio.google.com/apikey
+ * Free tier: 15 requests/min, 1M tokens/min
+ */
+async function tryGemini(
+  prompt: string,
+  systemPrompt: string
+): Promise<string | null> {
+  try {
+    const apiKey = process.env.GEMINI_API_KEY
+    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+      return null
+    }
+
+    const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: `${systemPrompt}\n\n${prompt}` }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 3000,
+          },
+          safetySettings: [
+            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+          ],
+        }),
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.log(`Gemini API error (${response.status}): ${errorText}`)
+        return null
+      }
+
+      const data = await response.json()
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+      if (text) {
+        console.log('Gemini response received successfully')
+        return text.trim()
+      }
+      return null
+    } catch (error) {
+      clearTimeout(timeoutId)
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Gemini request timed out')
+        return null
+      }
+      console.log('Gemini not available, trying next provider...')
+      return null
+    }
+  } catch (error) {
+    console.log('Gemini not available, trying next provider...')
+    return null
+  }
+}
+
+/**
  * Try Ollama (local LLM) - completely free, runs locally
  * This is the recommended AI provider - no API keys needed!
  */
@@ -257,19 +333,23 @@ async function callAI(
   fallbackText: string
 ): Promise<string> {
   // Try providers in order of preference
-  // 1. Ollama (local, free)
+  // 1. Google Gemini (free cloud API - recommended!)
+  const geminiResult = await tryGemini(prompt, systemPrompt)
+  if (geminiResult) return geminiResult
+
+  // 2. Ollama (local, free - no API key needed)
   const ollamaResult = await tryOllama(prompt, systemPrompt)
   if (ollamaResult) return ollamaResult
 
-  // 2. Hugging Face (free tier)
+  // 3. Hugging Face (free tier)
   const hfResult = await tryHuggingFace(prompt, systemPrompt)
   if (hfResult) return hfResult
 
-  // 3. OpenAI (if key available)
+  // 4. OpenAI (if key available)
   const openaiResult = await tryOpenAI(prompt, systemPrompt)
   if (openaiResult) return openaiResult
 
-  // 4. Fallback to simple dictionary-based replacement
+  // 5. Fallback to simple dictionary-based replacement
   return simpleMedicalSimplifier(fallbackText)
 }
 
@@ -671,4 +751,248 @@ function extractKeyFindings(text: string): string[] {
   }
 
   return findings.slice(0, 5) // Max 5 findings
+}
+
+/**
+ * Rule-based triage fallback when AI is unavailable
+ */
+function ruleBasedTriage(
+  primarySymptom: string,
+  severity: number,
+  duration: string,
+  associatedSymptoms: string[],
+  preExistingConditions: string[]
+): { triageLevel: 'SELF_CARE' | 'PHARMACY' | 'DOCTOR'; explanation: string; actionItems: string[]; warningSignsToWatch: string[]; recommendedSpecialist?: string } {
+  const symptomLower = primarySymptom.toLowerCase()
+  const allSymptoms = [symptomLower, ...associatedSymptoms.map(s => s.toLowerCase())].join(' ')
+
+  // Parse duration into rough days
+  let durationDays = 1
+  const durationLower = duration.toLowerCase()
+  if (durationLower.includes('week')) durationDays = 7 * (parseInt(duration) || 1)
+  else if (durationLower.includes('month')) durationDays = 30 * (parseInt(duration) || 1)
+  else if (durationLower.includes('day')) durationDays = parseInt(duration) || 1
+  else if (durationLower.includes('hour')) durationDays = 0.5
+
+  const hasChronicConditions = preExistingConditions.length > 0
+
+  // EMERGENCY keywords → always DOCTOR
+  const emergencyKeywords = ['chest pain', 'difficulty breathing', 'shortness of breath', 'unconscious', 'seizure', 'severe bleeding', 'stroke', 'paralysis', 'fainting', 'blurred vision', 'slurred speech']
+  const isEmergency = emergencyKeywords.some(k => allSymptoms.includes(k))
+
+  if (isEmergency) {
+    return {
+      triageLevel: 'DOCTOR',
+      explanation: 'Your symptoms include signs that may require urgent medical evaluation. Please seek medical attention promptly.',
+      actionItems: [
+        'Visit the nearest emergency department or clinic immediately',
+        'Do not drive yourself — ask someone to take you or call for help',
+        'Bring a list of your current medications',
+        'Describe your symptoms clearly to the medical team',
+      ],
+      warningSignsToWatch: [
+        'Worsening of symptoms',
+        'Loss of consciousness',
+        'Severe difficulty breathing',
+        'Sudden numbness or weakness on one side',
+      ],
+      recommendedSpecialist: 'Emergency Medicine / General Physician',
+    }
+  }
+
+  // High severity → DOCTOR
+  if (severity >= 8) {
+    return {
+      triageLevel: 'DOCTOR',
+      explanation: `Your symptom severity is high (${severity}/10). It is recommended to consult a doctor for proper evaluation and treatment.`,
+      actionItems: [
+        'Schedule an appointment with a doctor as soon as possible',
+        'Keep track of your symptoms and any changes',
+        'Avoid self-medicating with strong medications',
+        'Rest and stay hydrated until your appointment',
+      ],
+      warningSignsToWatch: [
+        'Symptoms getting worse despite rest',
+        'New symptoms appearing',
+        'Fever above 103°F / 39.4°C',
+        'Inability to eat, drink, or sleep',
+      ],
+      recommendedSpecialist: 'General Physician',
+    }
+  }
+
+  // Moderate-high severity + long duration or chronic conditions → DOCTOR
+  if ((severity >= 5 && durationDays > 3) || (severity >= 6 && hasChronicConditions)) {
+    return {
+      triageLevel: 'DOCTOR',
+      explanation: `Your symptoms have persisted for ${duration} at a severity of ${severity}/10${hasChronicConditions ? ', and you have pre-existing conditions that require careful evaluation' : ''}. A medical professional should assess this.`,
+      actionItems: [
+        'Visit a doctor for a thorough examination',
+        'Prepare a timeline of your symptoms to share with the doctor',
+        'Mention all pre-existing conditions and current medications',
+        'Follow the doctor\'s prescribed treatment plan',
+      ],
+      warningSignsToWatch: [
+        'Sudden worsening of symptoms',
+        'Difficulty performing daily activities',
+        'Signs of dehydration (dark urine, dizziness)',
+        'Fever that does not respond to medication',
+      ],
+      recommendedSpecialist: 'General Physician',
+    }
+  }
+
+  // Moderate symptoms → PHARMACY
+  if (severity >= 4 || (allSymptoms.includes('fever') && severity >= 3) || durationDays >= 2) {
+    return {
+      triageLevel: 'PHARMACY',
+      explanation: `Your symptoms are moderate (severity ${severity}/10, duration ${duration}). Over-the-counter medication from a pharmacy may help manage your symptoms.`,
+      actionItems: [
+        'Visit a pharmacy and describe your symptoms to the pharmacist',
+        'Ask about appropriate over-the-counter medication',
+        'Follow dosage instructions carefully',
+        'Rest and stay hydrated',
+        'If symptoms do not improve in 2-3 days, consult a doctor',
+      ],
+      warningSignsToWatch: [
+        'Symptoms not improving after 3 days of medication',
+        'Severity increasing above 7/10',
+        'New symptoms appearing',
+        'Allergic reaction to any medication (rash, swelling, difficulty breathing)',
+      ],
+    }
+  }
+
+  // Mild symptoms → SELF_CARE
+  return {
+    triageLevel: 'SELF_CARE',
+    explanation: `Your symptoms appear mild (severity ${severity}/10, duration ${duration}). These can likely be managed at home with basic self-care.`,
+    actionItems: [
+      'Get plenty of rest',
+      'Stay well hydrated — drink water, herbal tea, or clear broths',
+      'Monitor your symptoms and note any changes',
+      'Use basic home remedies (warm compress, steam inhalation, etc.)',
+      'If symptoms persist beyond 2-3 days or worsen, consider visiting a pharmacy or doctor',
+    ],
+    warningSignsToWatch: [
+      'Symptoms lasting more than 3 days',
+      'Severity increasing above 5/10',
+      'Development of fever above 101°F / 38.3°C',
+      'Inability to eat or drink normally',
+    ],
+  }
+}
+
+/**
+ * Analyze symptoms and provide triage recommendation using AI
+ */
+export async function analyzeSymptoms(
+  request: import('@/lib/types').SymptomCheckerRequest
+): Promise<import('@/lib/types').SymptomCheckerResponse> {
+  const lang = languageNames[request.language] || 'English'
+
+  const systemPrompt = `You are a medical triage assistant. You are NOT a doctor and cannot provide medical diagnoses. Based on patient information, classify the situation into exactly one of: SELF_CARE, PHARMACY, or DOCTOR.
+
+Rules:
+- Always err on the side of caution — if unsure, recommend DOCTOR
+- Chest pain + breathing difficulty = always DOCTOR
+- Severity >= 8 = always DOCTOR
+- Always include actionable recommendations
+- Always include warning signs for escalation
+- Respond in ${lang}
+
+Respond ONLY in valid JSON with this exact structure:
+{
+  "triageLevel": "SELF_CARE" | "PHARMACY" | "DOCTOR",
+  "confidence": "low" | "medium" | "high",
+  "explanation": "2-4 sentence explanation of the recommendation",
+  "actionItems": ["specific action 1", "specific action 2", "specific action 3", "specific action 4"],
+  "warningSignsToWatch": ["warning sign 1", "warning sign 2", "warning sign 3"],
+  "recommendedSpecialist": "specialist type if DOCTOR, otherwise omit"
+}`
+
+  const userPrompt = `Patient Information:
+- Age: ${request.age} years old
+- Sex: ${request.sex}
+- Primary Symptom: ${request.primarySymptom}
+${request.symptomCategory ? `- Symptom Category: ${request.symptomCategory}` : ''}
+- Duration: ${request.duration}
+- Severity: ${request.severity}/10
+- Associated Symptoms: ${request.associatedSymptoms.length > 0 ? request.associatedSymptoms.join(', ') : 'None reported'}
+- Pre-existing Conditions: ${request.preExistingConditions.length > 0 ? request.preExistingConditions.join(', ') : 'None reported'}
+- Current Medications: ${request.currentMedications || 'None reported'}
+
+Based on this information, provide your triage recommendation as JSON.`
+
+  const disclaimer = 'This is NOT a medical diagnosis. This tool provides general health guidance only. Always consult a qualified healthcare professional for proper medical advice, diagnosis, or treatment. In case of emergency, call your local emergency number immediately.'
+
+  // Get rule-based fallback ready
+  const fallback = ruleBasedTriage(
+    request.primarySymptom,
+    request.severity,
+    request.duration,
+    request.associatedSymptoms,
+    request.preExistingConditions
+  )
+
+  const fallbackResponse: import('@/lib/types').SymptomCheckerResponse = {
+    triageLevel: fallback.triageLevel,
+    confidence: 'low',
+    explanation: fallback.explanation,
+    actionItems: fallback.actionItems,
+    warningSignsToWatch: fallback.warningSignsToWatch,
+    recommendedSpecialist: fallback.recommendedSpecialist,
+    disclaimer,
+    language: request.language,
+  }
+
+  try {
+    const result = await callAI(
+      userPrompt,
+      systemPrompt,
+      JSON.stringify(fallbackResponse)
+    )
+
+    // Try to parse JSON from the AI response
+    try {
+      const jsonMatch = result.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0])
+
+        // Validate triageLevel
+        const validLevels = ['SELF_CARE', 'PHARMACY', 'DOCTOR']
+        const triageLevel = validLevels.includes(parsed.triageLevel)
+          ? parsed.triageLevel
+          : fallbackResponse.triageLevel
+
+        const validConfidence = ['low', 'medium', 'high']
+        const confidence = validConfidence.includes(parsed.confidence)
+          ? parsed.confidence
+          : 'medium'
+
+        return {
+          triageLevel,
+          confidence,
+          explanation: parsed.explanation || fallbackResponse.explanation,
+          actionItems: Array.isArray(parsed.actionItems) && parsed.actionItems.length > 0
+            ? parsed.actionItems.map(String)
+            : fallbackResponse.actionItems,
+          warningSignsToWatch: Array.isArray(parsed.warningSignsToWatch) && parsed.warningSignsToWatch.length > 0
+            ? parsed.warningSignsToWatch.map(String)
+            : fallbackResponse.warningSignsToWatch,
+          recommendedSpecialist: parsed.recommendedSpecialist || fallbackResponse.recommendedSpecialist,
+          disclaimer,
+          language: request.language,
+        }
+      }
+    } catch (e) {
+      console.error('Symptom checker JSON parse error:', e)
+    }
+
+    // If JSON parsing fails, return fallback
+    return fallbackResponse
+  } catch (error) {
+    console.error('Error analyzing symptoms:', error)
+    return fallbackResponse
+  }
 }

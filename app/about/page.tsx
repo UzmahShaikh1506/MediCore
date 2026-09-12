@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -93,37 +94,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* <Card className="border-0 shadow-md text-center">
-              <CardHeader>
-                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle>Sujal Dingankar</CardTitle>
-                <CardDescription>Lead AI Engineer & Co-Founder</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Specializes in AI engineering and healthcare applications. Led the development of our OCR service and AI-powered analysis features.
-                </p>
-              </CardContent>
-            </Card> */}
-
-            <Card className="border-0 shadow-md text-center">
-              <CardHeader>
-                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle>Ansari Abdul Rehman</CardTitle>
-                <CardDescription>Healthcare Data Scientist</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Expert in medical data analysis and Indian healthcare systems. Ensures our medical terminology explanations are clinically relevant and culturally sensitive.
-                </p>
-              </CardContent>
-            </Card>
-
+          <div className="grid md:grid-cols-1 gap-8 max-w-sm mx-auto">
             <Card className="border-0 shadow-md text-center">
               <CardHeader>
                 <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -306,16 +277,21 @@ Protects user data and maintains compliance with healthcare security standards.
               Help us make healthcare insights accessible to millions of people across India and beyond.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Get Started Today
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Button asChild size="lg" variant="secondary" className="text-lg px-8">
+                <Link href="/">
+                  Get Started Today
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
               >
-                Contact Us
+                <Link href="/contact">
+                  Contact Us
+                </Link>
               </Button>
             </div>
           </div>

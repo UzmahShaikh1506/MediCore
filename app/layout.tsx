@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Navigation } from "@/components/navigation"
+import { FloatingChatbot } from "@/components/floating-chatbot"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <Navigation />
           {children}
         </Suspense>
+        <FloatingChatbot />
         <Analytics />
       </body>
     </html>

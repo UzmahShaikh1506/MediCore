@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock, CheckCircle, ArrowRight } from "lucide-react"
+import { toast } from "sonner"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -21,8 +22,13 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
+    toast.success("Thank you for reaching out! We've received your message and will get back to you shortly. 💚")
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    })
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -156,7 +162,7 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-semibold mb-1">Call Us</h3>
                         <p className="text-muted-foreground text-sm mb-2">Monday to Friday, 9 AM to 6 PM IST</p>
-                        <p className="text-primary font-medium">+91 98765 43210</p>
+                        <p className="text-primary font-medium">+91 98204 81932</p>
                       </div>
                     </div>
                   </CardContent>
@@ -172,9 +178,9 @@ export default function ContactPage() {
                         <h3 className="font-semibold mb-1">Visit Us</h3>
                         <p className="text-muted-foreground text-sm mb-2">Our headquarters</p>
                         <p className="text-primary font-medium">
-                          Bangalore, Karnataka
+                          Bandra Kurla Complex (BKC), Mumbai
                           <br />
-                          India
+                          Maharashtra 400051, India
                         </p>
                       </div>
                     </div>

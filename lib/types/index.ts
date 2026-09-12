@@ -61,3 +61,29 @@ export interface OCRResult {
   confidence: number
 }
 
+export type TriageLevel = 'SELF_CARE' | 'PHARMACY' | 'DOCTOR'
+
+export interface SymptomCheckerRequest {
+  age: number
+  sex: 'male' | 'female' | 'other'
+  language: Language
+  primarySymptom: string
+  symptomCategory?: string
+  duration: string
+  severity: number
+  associatedSymptoms: string[]
+  preExistingConditions: string[]
+  currentMedications?: string
+}
+
+export interface SymptomCheckerResponse {
+  triageLevel: TriageLevel
+  confidence: 'low' | 'medium' | 'high'
+  explanation: string
+  actionItems: string[]
+  warningSignsToWatch: string[]
+  recommendedSpecialist?: string
+  disclaimer: string
+  language: Language
+}
+
